@@ -3,12 +3,8 @@ from flask_cors import cross_origin, CORS
 from transformers import pipeline
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://localhost:5173"])
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
-@app.route("/")
-def index():
-    return jsonify({"Hello World":"server running"})
 
 @app.route("/summarize", methods=['POST'])
 def summarize():
