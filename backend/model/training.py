@@ -45,7 +45,7 @@ class TextDataset(Dataset):
         
         return torch.tensor(src), torch.tensor(tgt)
 
-def train_model(model, dataloader, epochs=10, lr=1e-4, start_epoch=0, best_val_loss=float('inf')):
+def train_model(model, dataloader, epochs=1, lr=1e-4, start_epoch=0, best_val_loss=float('inf')):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model.to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -102,4 +102,4 @@ def train_model(model, dataloader, epochs=10, lr=1e-4, start_epoch=0, best_val_l
                 'optimizer_state_dict': optimizer.state_dict(),
                 'best_val_loss': best_val_loss,
                 'word2idx': dataloader.dataset.word2idx 
-            }, os.path.join(checkpoint_dir, f'model_epoch_{epoch}.pth'))
+            }, os.path.join(checkpoint_dir, 'best_model.pth'))
