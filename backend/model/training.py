@@ -44,7 +44,7 @@ class TextDataset(Dataset):
         
         return torch.tensor(src), torch.tensor(tgt)
 
-def train_model(model, dataloader, epochs=5, lr=1e-4):
+def train_model(model, dataloader, epochs=10, lr=1e-4):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model.to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -73,7 +73,7 @@ def train_model(model, dataloader, epochs=5, lr=1e-4):
         print(f"Epoch {epoch+1}, Loss: {total_loss / len(dataloader):.4f}")
 
     # Save the model and word2idx
-    checkpoint_dir = 'backend/model/checkpoints'
+    checkpoint_dir = '../checkpoints'
     os.makedirs(checkpoint_dir, exist_ok=True)
     torch.save({
         'model_state_dict': model.state_dict(),

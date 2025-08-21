@@ -1,9 +1,9 @@
 import torch
 import os
-from .transformer import Transformer
+from .transformer import Transformer, create_masks
 from .training import preprocess_text
 
-def summarize(text, model_path='model/checkpoints/best_model.pth', max_len=128):
+def summarize(text, model_path='checkpoints/best_model.pth', max_len=128):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     # Construct absolute path to the model checkpoint
@@ -27,7 +27,6 @@ def summarize(text, model_path='model/checkpoints/best_model.pth', max_len=128):
     tgt = torch.tensor([[2]]).to(device)
     
     for _ in range(max_len):
-        from .transformer import create_masks
         src_mask, tgt_mask = create_masks(src, tgt)
         
         with torch.no_grad():
