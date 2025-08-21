@@ -1,4 +1,5 @@
 import torch
+import os
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
@@ -70,3 +71,11 @@ def train_model(model, dataloader, epochs=5, lr=1e-4):
             total_loss += loss.item()
         
         print(f"Epoch {epoch+1}, Loss: {total_loss / len(dataloader):.4f}")
+
+    # Save the model and word2idx
+    checkpoint_dir = 'backend/model/checkpoints'
+    os.makedirs(checkpoint_dir, exist_ok=True)
+    torch.save({
+        'model_state_dict': model.state_dict(),
+        'word2idx': dataloader.dataset.word2idx # Access word2idx from the dataset
+    }, os.path.join(checkpoint_dir, 'best_model.pth'))

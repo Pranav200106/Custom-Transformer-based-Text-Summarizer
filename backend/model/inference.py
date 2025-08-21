@@ -1,11 +1,16 @@
 import torch
+import os
 from .transformer import Transformer
 from .training import preprocess_text
 
-def summarize(text, model_path='backend/model/checkpoints/simple_model.pth', max_len=128):
+def summarize(text, model_path='model/checkpoints/best_model.pth', max_len=128):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
-    checkpoint = torch.load(model_path, map_location=device)
+    # Construct absolute path to the model checkpoint
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    absolute_model_path = os.path.join(base_dir, model_path)
+    
+    checkpoint = torch.load(absolute_model_path, map_location=device)
     word2idx = checkpoint['word2idx']
     idx2word = {i: w for w, i in word2idx.items()}
     vocab_size = len(word2idx)
