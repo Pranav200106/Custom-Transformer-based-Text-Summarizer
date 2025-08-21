@@ -1,26 +1,22 @@
-from flask import Flask, request, jsonify, redirect, url_for
-from flask_cors import cross_origin, CORS
-from transformers import pipeline
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from model.inference import summarize
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:5173"])
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+CORS(app)
 
-@app.route("/summarize", methods=['POST'])
-def summarize():
-    text = request.json["text"]
-    print(text)
-    if not text.strip():
-        return jsonify({"error": "No input provided"}), 400
+@app.route('/summarize', methods=['POST'])
+def summarize_text():
+    data = request.get_json()
+    if not data or 'text' not in data:
+        return jsonify({'error': 'No text provided'}), 400
     
-    text = text[:1024]
-
     try:
-        summary = summarizer(text, max_length=30, min_length = 20,do_sample=False)
-        return jsonify({"summary": summary[0]["summary_text"]})
+        summary = summarize(data['text'])
+        return jsonify({'summary': summary})
     except Exception as e:
-        return jsonify({"error": "Failed to generate summary"}), 500
-
+        print(f"Error during summarization: {e}")
+        return jsonify({'error': 'Failed to generate summary'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

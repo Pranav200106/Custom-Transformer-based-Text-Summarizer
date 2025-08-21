@@ -9,6 +9,9 @@ flask-cors = "*"
 transformers = "*"
 torch = "*"
 accelerate = "*"
+numpy = "*"
+tqdm = "*"
+datasets = "*"
 
 [dev-packages]
 
